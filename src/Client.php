@@ -342,7 +342,17 @@ class Client
      */
     protected function shouldUploadChunked($contents): bool
     {
-        $size = is_string($contents) ? strlen($contents) : fstat($contents)['size'];
+        $size = null;
+            
+        if(is_string($contents)) {
+            $size = strlen($contents);      
+        }
+        else {
+            $fstatContent = fstat($contents);
+            if($fstatContent) {
+                $size = $fstatContent['size'];
+            }
+        }
 
         if ($this->isPipe($contents)) {
             return true;
